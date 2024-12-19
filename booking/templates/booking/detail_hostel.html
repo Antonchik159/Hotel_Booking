@@ -1,0 +1,84 @@
+{% extends "booking/base.html" %}
+
+{% block title %}Хостели{% endblock %}
+
+{% block content %}
+
+<style>
+    .room-image {
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+    .room-image:hover {
+        transform: scale(1.05);
+    }
+</style>
+
+    {% if hostels %}
+    <div>
+        <div class="alert mb-3 mt-4 p-4 rounded shadow">
+                <h2 class="alert-heading">{{ hostels.name }}</h2>
+                <h4 style="font-size: large; font-style: italic;">{{ hostels.admin }}</h4>
+                <h4 class="alert-heading">{{ hostels.adress }}</h4><hr>
+                <h4 class="alert-heading">{{ hostels.about }}</h4><br>
+        </div><hr>
+        {% if room %}
+            {% for i in room %}
+            <div class="alert mb-3 mt-4 p-4 rounded shadow">
+                <center><h3>№{{ i.number }}</h3></center>
+                {% if i.images.exists %}
+                <div id="roomCarousel{{ i.number }}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        {% for image in i.images.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ image.image.url }}" class="d-block w-100 room-image" alt="Фото кімнати" data-bs-toggle="modal" data-bs-target="#imageModal{{ forloop.counter }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel{{ i.number }}" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel{{ i.number }}" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                {% for image in i.images.all %}
+                <div class="modal fade" id="imageModal{{ forloop.counter }}" tabindex="-1" aria-labelledby="imageModalLabel{{ forloop.counter }}" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <img src="{{ image.image.url }}" class="img-fluid" alt="Фото кімнати">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% else %}
+                <p>Немає фотографій для цієї кімнати.</p>
+                </center>
+                {% endif %}
+
+                <h3 class="alert-heading">К-сть спальних мість: {{ i.bed }}</h3>
+                <h4 class="alert-heading">Ціна:<br>{{ i.price }} грн</h4>
+                <a href="{% url 'booking' i.id %}" class="btn" style="background-color: #71a298; color: white; width: 120px;">Бронювати</a>
+
+            </div>
+            {% endfor %}
+        {% else %}
+        <center><h3>Нема данних про кімнати!</h3></center>
+        <center><h5 style="font-size: small;">Зачекайте, будь ласка...</h5></center>
+        {% endif %}
+    </div>
+    {% else %}
+        <h3>Нажаль немає данних</h3>
+    {% endif %}
+    <a href="{% url 'hostels' %}" class="btn" style="background-color: #71a298; color: white; width: 100px;">Назад</a>
+{% endblock %}
+
+

@@ -1,0 +1,29 @@
+{% extends "booking/base.html" %}
+
+{% block title %}Мій акаунт{% endblock %}
+
+{% block content %}
+<center><h2>{{ request.session.client_name }}</h2></center>
+    {% if book %}
+    <div class="d-flex flex-wrap gap-3 justify-content-start">
+        {% for i in book %}
+            <div class="alert mb-3 mt-4 p-4 rounded shadow" style="width: 300px;">
+                    <h3 class="alert-heading"><a href="{% url 'detail_booking' i.id %}" style="text-decoration: none; color: inherit;">{{ i.room.hostel.name }}</a></h3>
+                    <p style="font-size: medium;">{{ i.price }} грн</p>
+                    {% if i.approved == False %}
+                    <p style="color: red; font-weight: bold;">Відхилено</p>
+                    {% elif i.approved == True %}
+                    <p style="color: green; font-weight: bold;">Дозволено</p>
+                    {% elif i.approved == None %}
+                    <p style="color: black; font-weight: bold;">В обробці</p>
+                    {% else %}
+                    <p style="font-weight: bold;">Невідомо, зв'яжіться будь ласка</p>
+                    {% endif %}
+
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <h3>Ви ще нічого не бронювали</h3>
+    {% endif %}
+{% endblock %}

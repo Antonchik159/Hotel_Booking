@@ -1,0 +1,64 @@
+{% extends "booking/base.html" %}
+
+{% block title %}Хостели{% endblock %}
+
+{% block content %}
+
+<div>
+    <p style="font-weight: bold; font-size: 20px;">Готель:</p>
+    <p>{{ item.room.hostel.name }}</p><hr>
+    <p style="font-weight: bold; font-size: 20px;">Номер кімнати:</p>
+    <p>{{ item.room }}</p><hr>
+    <p style="font-weight: bold; font-size: 20px;">Ціна:</p>
+    <p>{{ item.price }} грн</p><hr>
+    <p style="font-weight: bold; font-size: 20px;">Дата заїзду:</p>
+    <p>{{ item.start_date }}</p><hr>
+    <p style="font-weight: bold; font-size: 20px;">Дата виїзду:</p>
+    <p>{{ item.last_date }}</p><hr>
+</div>
+
+<button 
+    class="btn btn-secondary dropdown-toggle" 
+    type="button" 
+    id="dropdownMenuButton"
+    data-bs-display="static" 
+    data-bs-toggle="dropdown" 
+    aria-haspopup="true" 
+    aria-expanded="false"
+    style="background-color: white; color: black;">  
+    Редагувати бронювання
+</button>
+
+<div class="dropdown-menu p-4 w-100 container" aria-labelledby="dropdownMenuButton">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="id_client">Клієнт</label>
+            <input type="text" name="client" value="{{ item.client }}" class="form-control form-control-my" id="id_client">
+        </div>
+        
+        <div class="form-group">
+            <label for="id_room">Номер</label>
+            <input type="text" name="room" value="{{ item.room }}" class="form-control form-control-my" id="id_room" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_price">Ціна</label>
+            <input type="text" name="price" value="{{ item.price }}" class="form-control form-control-my" id="id_price" readonly>
+        </div>
+        
+        <div class="form-group">
+            <label for="id_start_date">Дата початку</label>
+            <input type="date" name="start_date" value="{{ item.start_date }}" class="form-control form-control-my" id="id_start_date">
+        </div>
+        
+        <div class="form-group">
+            <label for="id_last_date">Дата закінчення</label>
+            <input type="date" name="last_date" value="{{ item.last_date }}" class="form-control form-control-my" id="id_last_date">
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Змінити</button>
+    </form>
+</div>
+{% endblock %}

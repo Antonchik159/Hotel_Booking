@@ -1,0 +1,18 @@
+{% extends "booking/base.html" %}
+
+{% block title %}Хостели{% endblock %}
+
+{% block content %}
+    {% if hostel %}
+    <div class="d-flex flex-wrap gap-3 justify-content-start">
+        {% for i in hostel %}
+            <div class="alert mb-3 mt-4 p-4 rounded shadow" style="width: 300px;">
+                    <h3 class="alert-heading"><a href="{% url 'show_detail_hostel' i.id %}" style="text-decoration: none; color: inherit;">{{ i.name }}</a></h3>
+                    <p style="font-size: small;">{{ i.admin }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <h3>Нажаль немає данних</h3>
+    {% endif %}
+{% endblock %}
