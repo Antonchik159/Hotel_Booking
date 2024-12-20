@@ -47,6 +47,11 @@
                     <a href="{% url 'account' %}" style="text-decoration: none; color: inherit;">{{ request.session.client_name }}</a>
                 </span>
                 <a href="{% url 'logout' %}" class="btn btn-outline-primary my-btn me-2">Вийти</a>
+            {% elif request.session.username %}
+                <span class="me-3" style="font-weight: bold; color: #ff83be;">
+                    <a href="{% url 'account' %}" style="text-decoration: none; color: inherit;">{{ request.session.username }}</a>
+                </span> <span style="color: red;">admin</span>
+                <a href="{% url 'logout' %}" class="btn btn-outline-primary my-btn me-2">Вийти</a>
             {% else %}
                 <button type="button" class="btn btn-outline-primary my-btn me-2"><a href="{% url 'request_login' %}" style="text-decoration: none; color: inherit;">Увійти</a></button>
                 <button type="button" class="btn btn-primary" style="background-color:#fce9ff ; color: #ff83be; border-color: #ec62a5;">
