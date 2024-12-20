@@ -94,9 +94,12 @@ def booking(request, item_id):
         client = get_object_or_404(Client, fullname=client_name)
         form = BookingForm(initial={'room': room, 'client': client, 'price': room_price})
         form.fields['client'].widget.attrs['readonly'] = 'readonly'
+        form.fields['room'].widget.attrs['style'] = 'pointer-events: none;'
+        form.fields['client'].widget.attrs['style'] = 'pointer-events: none;'
         return render(request, 'booking/book.html', {'form': form, 'room': room, 'client': client, 'price': room_price})
     else:
         form = BookingForm(initial={'room': room, 'price': room_price})
+        form.fields['room'].widget.attrs['style'] = 'pointer-events: none;'
         return render(request, 'booking/book.html', {'form': form, 'room': room, 'price': room_price})
     
 def account(request):

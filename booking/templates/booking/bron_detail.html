@@ -1,64 +1,91 @@
 {% extends "booking/base.html" %}
 
-{% block title %}Хостели{% endblock %}
+{% block title %}Деталі бронювання{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">Деталі бронювання</h4>
+            <hr>
+            <p><strong>Готель:</strong> {{ item.room.hostel.name }}</p>
+            <p><strong>Номер кімнати:</strong> {{ item.room }}</p>
+            <p><strong>Ціна:</strong> {{ item.price }} грн</p>
+            <p><strong>Дата заїзду:</strong> {{ item.start_date }}</p>
+            <p><strong>Дата виїзду:</strong> {{ item.last_date }}</p>
+        </div>
+    </div>
 
-<div>
-    <p style="font-weight: bold; font-size: 20px;">Готель:</p>
-    <p>{{ item.room.hostel.name }}</p><hr>
-    <p style="font-weight: bold; font-size: 20px;">Номер кімнати:</p>
-    <p>{{ item.room }}</p><hr>
-    <p style="font-weight: bold; font-size: 20px;">Ціна:</p>
-    <p>{{ item.price }} грн</p><hr>
-    <p style="font-weight: bold; font-size: 20px;">Дата заїзду:</p>
-    <p>{{ item.start_date }}</p><hr>
-    <p style="font-weight: bold; font-size: 20px;">Дата виїзду:</p>
-    <p>{{ item.last_date }}</p><hr>
-</div>
+    <div class="dropdown">
+        <button 
+            class="btn btn-secondary dropdown-toggle w-100" 
+            type="button" 
+            id="dropdownMenuButton"
+            data-bs-toggle="dropdown" 
+            aria-expanded="false"
+            style="background-color: #71a298; border-color: #5d887f;">
+            Редагувати бронювання
+        </button>
 
-<button 
-    class="btn btn-secondary dropdown-toggle" 
-    type="button" 
-    id="dropdownMenuButton"
-    data-bs-display="static" 
-    data-bs-toggle="dropdown" 
-    aria-haspopup="true" 
-    aria-expanded="false"
-    style="background-color: white; color: black;">  
-    Редагувати бронювання
-</button>
-
-<div class="dropdown-menu p-4 w-100 container" aria-labelledby="dropdownMenuButton">
-    <form method="post">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <label for="id_client">Клієнт</label>
-            <input type="text" name="client" value="{{ item.client }}" class="form-control form-control-my" id="id_client">
+        <div class="dropdown-menu p-4 w-100" aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto; background-color: aliceblue;">
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="id_client" class="form-label">Клієнт</label>
+                    <input 
+                        type="text" 
+                        name="client" 
+                        value="{{ item.client }}" 
+                        class="form-control" 
+                        id="id_client">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_room" class="form-label">Номер</label>
+                    <input 
+                        type="text" 
+                        name="room" 
+                        value="{{ item.room }}" 
+                        class="form-control" 
+                        id="id_room" 
+                        readonly>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_price" class="form-label">Ціна</label>
+                    <input 
+                        type="text" 
+                        name="price" 
+                        value="{{ item.price }}" 
+                        class="form-control" 
+                        id="id_price" 
+                        readonly>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_start_date" class="form-label">Дата початку</label>
+                    <input 
+                        type="date" 
+                        name="start_date" 
+                        value="{{ item.start_date }}" 
+                        class="form-control" 
+                        id="id_start_date">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="id_last_date" class="form-label">Дата закінчення</label>
+                    <input 
+                        type="date" 
+                        name="last_date" 
+                        value="{{ item.last_date }}" 
+                        class="form-control" 
+                        id="id_last_date">
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100" style="background-color: #ff83be; color: white; border-color: #fd4aa1;">Змінити</button>
+            </form>
         </div>
-        
-        <div class="form-group">
-            <label for="id_room">Номер</label>
-            <input type="text" name="room" value="{{ item.room }}" class="form-control form-control-my" id="id_room" readonly>
-        </div>
-        
-        <div class="form-group">
-            <label for="id_price">Ціна</label>
-            <input type="text" name="price" value="{{ item.price }}" class="form-control form-control-my" id="id_price" readonly>
-        </div>
-        
-        <div class="form-group">
-            <label for="id_start_date">Дата початку</label>
-            <input type="date" name="start_date" value="{{ item.start_date }}" class="form-control form-control-my" id="id_start_date">
-        </div>
-        
-        <div class="form-group">
-            <label for="id_last_date">Дата закінчення</label>
-            <input type="date" name="last_date" value="{{ item.last_date }}" class="form-control form-control-my" id="id_last_date">
-        </div>
-        
-        <button type="submit" class="btn btn-primary">Змінити</button>
-    </form>
+    </div>
 </div>
 {% endblock %}
