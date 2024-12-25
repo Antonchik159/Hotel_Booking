@@ -37,7 +37,7 @@ class Hostel(models.Model):
         return self.room_set.order_by('bed')
 
     def __str__(self) -> str:
-        return f"{self.name}, {self.adress}"
+        return f"{self.name}"
 
 class Room(models.Model):
     number = models.PositiveIntegerField(verbose_name="Кімната")

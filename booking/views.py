@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout, authenticate, login
 from .models import Hostel, Booking, Client, Room
-from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm
+from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 
@@ -12,12 +12,12 @@ def request_login(request):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            # Проверяем клиента
+            # Перевірка клієнта
             try:
                 user = Client.objects.get(email=email)
                 if user.check_password(password):
                     login(request, user)
-                    user.update_last_login()  # Обновление времени последнего входа
+                    user.update_last_login()  # Оновлення останнього входу
                     request.session['client_name'] = user.fullname
                     messages.success(request, 'Ви успішно увійшли!')
                     return redirect('home')
@@ -25,9 +25,9 @@ def request_login(request):
                     messages.error(request, 'Невірний пароль!')
                     return redirect('request_login')
             except Client.DoesNotExist:
-                pass  # Если клиент не найден, переходим к проверке администратора
+                pass
 
-            # Проверяем администратора
+            # Перевірка адміна
             try:
                 admin = User.objects.get(email=email)
                 if admin.check_password(password):
@@ -38,7 +38,7 @@ def request_login(request):
                 else:
                     messages.error(request, 'Невірний пароль!')
                     return redirect('request_login')
-            except User.DoesNotExist:  # Исправлено с Client.DoesNotExist
+            except User.DoesNotExist:
                 messages.error(request, 'Користувач або адмін з таким email не знайдено.')
                 return redirect('request_login')
 
@@ -93,7 +93,7 @@ def booking(request, item_id):
             start_date = form.cleaned_data['start_date']
             last_date = form.cleaned_data['last_date']
 
-            # Проверка на пересечение промежутков дат
+            # Перетин дат
             conflicting_bookings = Booking.objects.filter(
                 room=room,
                 start_date__lt=last_date,
@@ -120,6 +120,36 @@ def booking(request, item_id):
         form.fields['room'].widget.attrs['style'] = 'pointer-events: none;'
         return render(request, 'booking/book.html', {'form': form, 'room': room, 'price': room_price})
     
+def create_hotels(request):
+    admin_name = request.session.get('username', None)
+    if request.method == 'POST':
+        form = HostelForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('hostels')
+    if admin_name:
+        admin = get_object_or_404(User, username=admin_name)
+        form = HostelForm(initial={'admin': admin})
+        form.fields['admin'].widget.attrs['readonly'] = 'readonly'
+        return render(request, 'booking/create_hotel.html', {'form': form, 'admin': admin})
+    # else:
+    #     form = HostelForm()
+    #     return render(request, 'booking/create_hotel.html', {'form': form})
+
+def create_room(request, item_id):
+    room_hostel = get_object_or_404(Hostel, id=item_id)
+    if request.method == 'POST':
+        form = RoomForm(request.POST)
+        if form.is_valid():
+            room = form.save(commit=False)
+            room.hostel = room_hostel
+            room.save()
+            return redirect('hostels')
+    else:
+        form = RoomForm(initial={'hostel': room_hostel})
+        form.fields['hostel'].widget.attrs['readonly'] = 'readonly'
+    return render(request, 'booking/create_room.html', {'form': form, 'hostel': room_hostel})
+
 def account(request):
     # Клієнт
     client_name = request.session.get('client_name', None)
@@ -186,3 +216,5 @@ def add_admin(request):
     else:
         form = UserForm()
     return render(request, 'booking/create_adm.html', {'form': form})
+
+

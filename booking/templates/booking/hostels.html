@@ -15,4 +15,10 @@
     {% else %}
         <h3>Нажаль немає данних</h3>
     {% endif %}
+    {% if request.session.username %}
+    <center>
+        <p class="btn" style="background-color: #71a298; color: white;"><a href="{% url 'new_hotel' %}" style="text-decoration: none; color: inherit;">Додати готель</a></p>
+    </center>
+    {% endif %}
+    
 {% endblock %}

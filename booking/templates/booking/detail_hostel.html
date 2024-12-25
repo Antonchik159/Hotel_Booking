@@ -76,8 +76,9 @@
         {% endif %}
     </div>
     {% else %}
-        <h3>Нажаль немає данних</h3>
+    <h3>Нажаль немає данних</h3>
     {% endif %}
+    <center><a class="btn" href="{% url 'create_room' hostels.id %}" style="background-color: #71a298; color: white; width: 150px;">Додати кімнату</a></center>
     <a href="{% url 'hostels' %}" class="btn" style="background-color: #71a298; color: white; width: 100px;">Назад</a>
 {% endblock %}
 

@@ -1,7 +1,7 @@
-from django.forms import ModelForm, TextInput, EmailInput, NumberInput, PasswordInput, DateInput, Select
+from django.forms import ModelForm, TextInput, EmailInput, NumberInput, PasswordInput, DateInput, Select, Textarea
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Client, Booking
+from .models import Client, Booking, Hostel, Room
 from django import forms
 
 class BookingForm(ModelForm):
@@ -27,6 +27,29 @@ class BookingForm(ModelForm):
             "price": TextInput(attrs={
                 'class': 'form-control form-control-my',
                 'readonly': 'readonly',
+            })
+        }
+
+class RoomForm(ModelForm):
+    class Meta:
+        model = Room
+        fields = ["number", "price", "bed", "hostel"]
+        widgets = {
+            "number": NumberInput(attrs={
+                'class': 'form-control-my form-control',
+                'placeholder': 'Номер кімнати'
+            }),
+            "price": NumberInput(attrs={
+                'class': 'form-control-my form-control',
+                'placeholder': 'Ціна в гривнях'
+            }),
+            "bed": NumberInput(attrs={
+                'class': 'form-control-my form-control',
+                'placeholder': 'Кількіссть спальних місць'
+            }),
+            "hostel": Select(attrs={
+                'class': 'form-control-my form-control',
+                'placeholder': 'Готель'
             })
         }
 
@@ -98,4 +121,27 @@ class BookingApprovalForm(forms.ModelForm):
         fields = ['approved']
         widgets = {
             'approved': forms.Select(attrs={'style': 'font-size: 15px;'}, choices=[(True, 'Підтверджено'), (False, 'Відхилено')])
+        }
+
+class HostelForm(ModelForm):
+    class Meta:
+        model = Hostel
+        fields = ["name", "about", "admin", "adress"]
+        widgets = {
+            "name": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Назва готелю',
+            }),
+            "about": Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Про готель',
+            }),
+            "admin": Select(attrs={
+                'class': 'form-control',
+                'placeholder': 'Адмін',
+            }),
+            "adress": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Адреса',
+            })
         }
