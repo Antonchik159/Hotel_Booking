@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout, authenticate, login
-from .models import Hostel, Booking, Client, Room, RoomImage
-from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm, RoomImageForm, RoomImageFormSet
+from .models import Hostel, Booking, Client, Room, RoomImage, Comment
+from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm, RoomImageFormSet, CommentForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 
@@ -57,7 +57,19 @@ def hostel(request):
 def show_det_hostel(request, item_id):
     hostel = get_object_or_404(Hostel, id=item_id)
     rooms = hostel.get_room()
-    return render(request, 'booking/detail_hostel.html', {'hostels': hostel, 'room': rooms})
+
+    client_name = request.session.get('client_name', None)
+    client = get_object_or_404(Client, fullname=client_name)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.client = client
+            comment.hostel = hostel
+            comment.save()
+    else:
+        form = CommentForm()
+    return render(request, 'booking/detail_hostel.html', {'hostels': hostel, 'room': rooms, 'form': form, 'comments': hostel.get_comments()})
 
 def client(request):
     if request.method == 'POST':
@@ -224,3 +236,7 @@ def add_admin(request):
     else:
         form = UserForm()
     return render(request, 'booking/create_adm.html', {'form': form})
+
+def del_comment(request, item_id):
+    comment = get_object_or_404(Comment, id=item_id)
+    comment.delete()

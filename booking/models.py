@@ -38,6 +38,9 @@ class Hostel(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name}"
+    
+    def get_comments(self):
+        return self.comment_set.all()
 
 class Room(models.Model):
     number = models.PositiveIntegerField(verbose_name="Кімната")
@@ -57,7 +60,6 @@ class RoomImage(models.Model):
 
     def __str__(self):
         return f"Фото кімнати №{self.room.number}"
-
     
 class Booking(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
@@ -70,3 +72,12 @@ class Booking(models.Model):
 
     def __str__(self) -> str:
         return f"{self.client}, {self.room}, {self.price}, {self.start_date}, {self.last_date}, {self.created_at}"
+    
+class Comment(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    hostel = models.ForeignKey(Hostel, on_delete=models.CASCADE)
+    comment = models.TextField(max_length=300, verbose_name="Ваш коментар")
+    comment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.comment}, {self.comment_date}"

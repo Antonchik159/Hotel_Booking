@@ -1,7 +1,7 @@
 from django.forms import ModelForm, TextInput, EmailInput, NumberInput, PasswordInput, DateInput, Select, Textarea, FileInput, modelformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Client, Booking, Hostel, Room, RoomImage
+from .models import Client, Booking, Hostel, Room, RoomImage, Comment
 from django import forms
 
 class BookingForm(ModelForm):
@@ -160,5 +160,16 @@ class HostelForm(ModelForm):
             "adress": TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Адреса',
+            })
+        }
+
+class CommentForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["comment"]
+        widgets = {
+            "comment": Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Ваш коментар'
             })
         }
