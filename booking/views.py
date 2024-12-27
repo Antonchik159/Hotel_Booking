@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout, authenticate, login
-from .models import Hostel, Booking, Client, Room
-from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm
+from .models import Hostel, Booking, Client, Room, RoomImage
+from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm, RoomImageForm, RoomImageFormSet
 from django.contrib import messages
 from django.contrib.auth.models import User
 
@@ -140,15 +140,23 @@ def create_room(request, item_id):
     room_hostel = get_object_or_404(Hostel, id=item_id)
     if request.method == 'POST':
         form = RoomForm(request.POST)
-        if form.is_valid():
+        image_formset = RoomImageFormSet(request.POST, request.FILES, queryset=RoomImage.objects.none())
+        if form.is_valid() and image_formset.is_valid():
             room = form.save(commit=False)
             room.hostel = room_hostel
             room.save()
+
+            for image_form in image_formset:
+                if image_form.cleaned_data.get('image'):
+                    image = image_form.save(commit=False)
+                    image.room = room
+                    image.save()
             return redirect('hostels')
     else:
         form = RoomForm(initial={'hostel': room_hostel})
         form.fields['hostel'].widget.attrs['readonly'] = 'readonly'
-    return render(request, 'booking/create_room.html', {'form': form, 'hostel': room_hostel})
+        image_formset = RoomImageFormSet(queryset=RoomImage.objects.none())
+    return render(request, 'booking/create_room.html', {'form': form, 'image_formset': image_formset, 'hostel': room_hostel})
 
 def account(request):
     # Клієнт
@@ -216,5 +224,3 @@ def add_admin(request):
     else:
         form = UserForm()
     return render(request, 'booking/create_adm.html', {'form': form})
-
-

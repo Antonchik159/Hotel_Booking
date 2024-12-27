@@ -1,7 +1,7 @@
-from django.forms import ModelForm, TextInput, EmailInput, NumberInput, PasswordInput, DateInput, Select, Textarea
+from django.forms import ModelForm, TextInput, EmailInput, NumberInput, PasswordInput, DateInput, Select, Textarea, FileInput, modelformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Client, Booking, Hostel, Room
+from .models import Client, Booking, Hostel, Room, RoomImage
 from django import forms
 
 class BookingForm(ModelForm):
@@ -52,6 +52,23 @@ class RoomForm(ModelForm):
                 'placeholder': 'Готель'
             })
         }
+
+class RoomImageForm(ModelForm):
+    class Meta:
+        model = RoomImage
+        fields = ["image"]
+        widgets = {
+            'image': FileInput(attrs={
+                'class': 'form-control my form-control',
+                'placeholder': 'Завантажити фото'
+            })
+        }
+
+RoomImageFormSet = modelformset_factory(
+    RoomImage,
+    RoomImageForm,
+    extra=4
+)
 
 class ClientForm(ModelForm):
     class Meta:

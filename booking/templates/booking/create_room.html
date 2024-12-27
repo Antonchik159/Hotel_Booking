@@ -79,7 +79,7 @@
 <center>
     <div class="card-my" style="max-width: 500px;">
         <h3>Заповніть форму для додавання кімнати</h3>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group-my">
                 <label for="id_number">Номер кімнати:</label>
@@ -96,6 +96,12 @@
             <div class="form-group-my">
                 <label for="id_hostel">Готель:</label>
                 {{ form.hostel }}
+            </div>
+            <div class="form-group-my">
+                {{ image_formset.management_form }}
+                {% for image_form in image_formset %}
+                    {{ image_form.as_p }}
+                {% endfor %}
             </div>
             <button type="submit" class="btn btn-my m-3">Додати</button>
         </form>
