@@ -66,9 +66,13 @@
 
                 <h3 class="alert-heading">К-сть спальних мість: {{ i.bed }}</h3>
                 <h4 class="alert-heading">Ціна:<br>{{ i.price }} грн</h4>
-                <a href="{% url 'booking' i.id %}" class="btn" style="background-color: #71a298; color: white; width: 120px;">Бронювати</a>
-
+                {% if request.session.client_name %}
+                    <a href="{% url 'booking' i.id %}" class="btn" style="background-color: #71a298; color: white; width: 120px;">Бронювати</a>
+                {% endif %}
             </div>
+            {% if request.session.username %}
+                <center><a class="btn" href="{% url 'create_room' hostels.id %}" style="background-color: #71a298; color: white; width: 150px;">Додати кімнату</a></center>
+            {% endif %}    
             {% endfor %}
         {% else %}
         <center><h3>Нема данних про кімнати!</h3></center>
@@ -82,7 +86,7 @@
     <h3>Нажаль немає данних</h3>
     {% endif %}
     <center><h4>Коментарі</h4></center>
-    {% if request.session.client_name %}
+    {% if request.session.client_name or request.session.username %}
         <divc lass="alert mb-3 mt-4 p-4 rounded shadow">
             {% if comments %}
             <ul>

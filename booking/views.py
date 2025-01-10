@@ -4,6 +4,8 @@ from .models import Hostel, Booking, Client, Room, RoomImage, Comment
 from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm, RoomImageFormSet, CommentForm
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 def request_login(request):
     if request.method == 'POST':
@@ -59,16 +61,22 @@ def show_det_hostel(request, item_id):
     rooms = hostel.get_room()
 
     client_name = request.session.get('client_name', None)
-    client = get_object_or_404(Client, fullname=client_name)
+    client = None
+    if not request.user.is_superuser and client_name:
+        client = get_object_or_404(Client, fullname=client_name)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             comment = form.save(commit=False)
-            comment.client = client
+            if client:
+                comment.client = client
+            else:
+                comment.client = None
             comment.hostel = hostel
             comment.save()
     else:
         form = CommentForm()
+
     return render(request, 'booking/detail_hostel.html', {'hostels': hostel, 'room': rooms, 'form': form, 'comments': hostel.get_comments()})
 
 def client(request):
@@ -240,3 +248,5 @@ def add_admin(request):
 def del_comment(request, item_id):
     comment = get_object_or_404(Comment, id=item_id)
     comment.delete()
+    
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
