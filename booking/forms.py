@@ -170,6 +170,7 @@ class CommentForm(ModelForm):
         widgets = {
             "comment": Textarea(attrs={
                 'class': 'form-control',
-                'placeholder': 'Ваш коментар'
+                'placeholder': 'Ваш коментар',
+                'style': 'height: 50px; background-color: azure;'
             })
         }

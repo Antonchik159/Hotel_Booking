@@ -3,9 +3,9 @@
 {% block title %}Деталі бронювання{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4" style="max-width: 800px;">
     <div class="card shadow-sm mb-4">
-        <div class="card-body">
+        <div class="card-body shadow-lg">
             <h4 class="card-title">Деталі бронювання</h4>
             <hr>
             <p><strong>Готель:</strong> {{ item.room.hostel.name }}</p>
@@ -27,7 +27,7 @@
             Редагувати бронювання
         </button>
 
-        <div class="dropdown-menu p-4 w-100" aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto; background-color: aliceblue;">
+        <div class="dropdown-menu p-4 w-100" aria-labelledby="dropdownMenuButton" style="max-height: 350px; overflow-y: auto; background-color: aliceblue;">
             <form method="post">
                 {% csrf_token %}
                 

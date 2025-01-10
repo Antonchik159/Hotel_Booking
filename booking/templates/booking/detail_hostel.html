@@ -6,11 +6,11 @@
 
 <style>
     .room-image {
-    max-height: 500px;
-    object-fit: cover;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
+        max-height: 500px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
     .room-image:hover {
         transform: scale(1.05);
     }
@@ -85,13 +85,13 @@
     {% else %}
     <h3>Нажаль немає данних</h3>
     {% endif %}
-    <center><h4>Коментарі</h4></center>
+    <center><h4 class="mt-4">Коментарі</h4></center>
     {% if request.session.client_name or request.session.username %}
         <divc lass="alert mb-3 mt-4 p-4 rounded shadow">
             {% if comments %}
-            <ul>
+            <ul class="list-group">
                 {% for commen in comments %}
-                <li>
+                <li class="list-group-item">
                     <strong>{{ commen.client }}:</strong>
                     {{ commen.comment }}<p style="font-size: small;">{{ commen.comment_date }}</p>
                     {% if request.session.username %}
@@ -106,8 +106,8 @@
             <p>Поки, що нема коментарів</p>
             {% endif %}
             <br>
-            <div class="d-flex flex-wrap gap-3 justify-content-start">
-                <div class="card mb-3 mt-4 p-4 rounded shadow" style="width: 500px;">
+            <center><div>
+                <div class="card mb-3 mt-4 p-4 rounded shadow" style="width: 500px; background-color: azure;">
                     <form method="post">
                         {% csrf_token %}
                         {{form.comment}}
