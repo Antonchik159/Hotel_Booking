@@ -1,7 +1,7 @@
 from django.forms import ModelForm, TextInput, EmailInput, NumberInput, PasswordInput, DateInput, Select, Textarea, FileInput, modelformset_factory
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Client, Booking, Hostel, Room, RoomImage, Comment
+from .models import Client, Booking, Hostel, Room, RoomImage, Comment, PromoParticipant
 from django import forms
 
 class BookingForm(ModelForm):
@@ -173,4 +173,23 @@ class CommentForm(ModelForm):
                 'placeholder': 'Ваш коментар',
                 'style': 'height: 50px; background-color: azure;'
             })
+        }
+
+class PromoParticipantForm(ModelForm):
+    class Meta:
+        model = PromoParticipant
+        fields = ['name', 'email', 'phone']
+        widgets = {
+            "name": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': "Ваше ім'я"
+            }),
+            "email": EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Email'
+            }),
+            "phone": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Телефон'
+            }),
         }

@@ -14,5 +14,6 @@ urlpatterns = [
     path('create-admin', views.add_admin, name='create_admin'),
     path('new-hotel', views.create_hotels, name='new_hotel'),
     path('new-room/<int:item_id>/', views.create_room, name='create_room'),
-    path('del-comment/<int:item_id>/', views.del_comment, name='del_comment')
+    path('del-comment/<int:item_id>/', views.del_comment, name='del_comment'),
+    path('promo', views.promo, name='promo_ac')
 ]

@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import logout, authenticate, login
 from .models import Hostel, Booking, Client, Room, RoomImage, Comment
-from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm, RoomImageFormSet, CommentForm
+from .forms import ClientForm, EmailPasswordForm, BookingForm, UserForm, BookingApprovalForm, HostelForm, RoomForm, RoomImageFormSet, CommentForm, PromoParticipantForm
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
@@ -101,6 +101,19 @@ def client(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+def promo(request):
+    if request.method == 'POST':
+        form = PromoParticipantForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Ви успішно зареєстровані для участі в акції!')
+            return redirect('promo_ac')
+        else:
+            messages.error(request, 'Будь ласка, перевірте введені дані.')
+    else:
+        form = PromoParticipantForm()
+    return render(request, 'booking/promo.html', {'form': form})
 
 def booking(request, item_id):
     room = get_object_or_404(Room, id=item_id)
