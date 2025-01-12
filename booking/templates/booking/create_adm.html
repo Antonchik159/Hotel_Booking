@@ -83,7 +83,7 @@
         <form method="post">
             {% csrf_token %}
             <div class="form-group-my">
-                <label for="id_username">Юзернейм:</label>
+                <label for="id_username">Юзернейм не може містити пробіли:</label>
                 {{ form.username }}
             </div>
             <div class="form-group-my">

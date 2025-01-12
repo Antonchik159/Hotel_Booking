@@ -252,6 +252,7 @@ def add_admin(request):
             request.session['username'] = user.username
             return redirect('hostels')
         else:
+            print(form.errors)
             messages.error(request, 'Користувач з такою поштою вже зареєстрований. Бажаєте увійти?')
             return redirect('home')
     else:
